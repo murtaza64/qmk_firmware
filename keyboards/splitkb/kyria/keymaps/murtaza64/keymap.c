@@ -77,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * |        |   Z  |   X  |   C  |   V  |   B  |F-Keys|      |  |      |      |   N  |   M  | ,  < | . >  | /  ? |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Adjust|      | Bksp | Tab  | Sym  |  | Nav  | Enter| Space|      | Menu |
+ *                        |Adjust| Sym  | Bksp | Tab  |      |  |      | Enter| Space| Nav  | Menu |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
@@ -85,7 +85,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , XXXXXXX,
       KC_ESC  , A_GUI,  S_ALT  , D_CTRL , F_SHIFT,   KC_G ,                                        KC_H, J_SHIFT, K_CTRL,   L_ALT, SC_GUI, KC_QUOT,
       XXXXXXX , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , FKEYS  ,XXXXXXX,     XXXXXXX, XXXXXXX, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 ADJUST, XXXXXXX, KC_BSPC, KC_TAB , SYM   ,     NAV    , KC_ENT , KC_SPC, XXXXXXX, KC_APP
+                                 ADJUST, SYM    , KC_BSPC, KC_TAB , XXXXXXX,     XXXXXXX, KC_ENT , KC_SPC, NAV  , KC_APP
     ),
 
 /*
@@ -98,7 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
  * | LShift |   Z  |   X  |   C  |   D  |   V  |F-Keys|      |  |      |      |   K  |   H  | ,  < | . >  | /  ? |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Adjust|      | Bksp | Tab  | Sym  |  | Nav  | Enter| Space|      | Menu |
+ *                        |Adjust| Sym  | Bksp | Tab  |      |  |      | Enter| Space| Nav  | Menu |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
@@ -106,27 +106,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, XXXXXXX,
      KC_ESC  , A_GUI, R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , O_GUI , KC_QUOT,
      XXXXXXX , KC_Z ,  KC_X   ,  KC_C  ,   KC_D ,   KC_V , FKEYS  ,XXXXXXX,     XXXXXXX, XXXXXXX, KC_K,   KC_H ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 ADJUST, XXXXXXX, KC_BSPC, KC_TAB , SYM   ,     NAV    , KC_ENT , KC_SPC, XXXXXXX, KC_APP
+                                ADJUST, SYM    , KC_BSPC, KC_TAB , XXXXXXX,     XXXXXXX, KC_ENT , KC_SPC, NAV  , KC_APP
     ),
 
 /*
  * Nav Layer: Media, navigation
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |      |      |      |                              |M Play| PgDn | PgUp | Home | End  | Delete |
+ * |        |      |      |      |      |      |                              |Home  | PgDn | PgUp | End  |M Play| Delete |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  GUI |  Alt | Ctrl | Shift|      |                              | Mute |   ↓  |   ↑  |   ←  |   →  | Insert |
+ * |        |  GUI |  Alt | Ctrl | Shift|      |                              |  ←   |   ↓  |   ↑  |   →  | Mute | Insert |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |      |  |      |      | Pause|Vol - |Vol + |M Prev|M Next| PrtSc  |
+ * |        |      |      |      |      |      |      |      |  |      |      |M Prev|Vol - |Vol + |M Next|Pause | PrtSc  |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_NAV] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_MPLY, KC_PGDN, KC_PGUP, KC_HOME, KC_END , KC_DEL,
-      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                                     KC_MUTE, KC_DOWN, KC_UP  , KC_LEFT, KC_RGHT, KC_INS,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,KC_PAUSE, KC_VOLD, KC_VOLU, KC_MPRV, KC_MNXT, KC_PSCR,
+      _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, KC_MPLY , KC_DEL,
+      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, KC_MUTE, KC_INS,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, KC_PAUS, KC_PSCR,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
