@@ -52,11 +52,13 @@ enum layers {
 #define D_CTRL   MT(MOD_LCTL  , KC_D)
 #define S_ALT    MT(MOD_LALT  , KC_S)
 #define A_GUI    MT(MOD_LGUI  , KC_A)
+#define D_GUI    MT(MOD_LGUI  , KC_D)
 
 #define N_SHIFT  MT(MOD_RSFT  , KC_N)
 #define E_CTRL   MT(MOD_RCTL  , KC_E)
 #define I_ALT    MT(MOD_RALT  , KC_I)
 #define O_GUI    MT(MOD_RGUI  , KC_O)
+#define H_GUI    MT(MOD_RGUI  , KC_H)
 
 #define T_SHIFT  MT(MOD_LSFT  , KC_T)
 #define S_CTRL   MT(MOD_LCTL  , KC_S)
@@ -106,8 +108,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_COLEMAK_DH] = LAYOUT(
       XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, XXXXXXX,
-      KC_ESC  , A_GUI, R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , O_GUI , KC_QUOT,
-      XXXXXXX , KC_Z ,  KC_X   ,  KC_C  ,   KC_D ,   KC_V , FKEYS  ,XXXXXXX,     XXXXXXX, XXXXXXX, KC_K,   KC_H ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
+      KC_ESC  , KC_A , R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , KC_O  , KC_QUOT,
+      XXXXXXX , KC_Z ,  KC_X   ,  KC_C  ,  D_GUI ,   KC_V , FKEYS  ,XXXXXXX,     XXXXXXX, XXXXXXX, KC_K,  H_GUI ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
                                  ADJUST, NAV    ,  KC_TAB ,KC_BSPC, XXXXXXX,     XXXXXXX, KC_SPC , KC_ENT, SYM  , KC_APP
     ),
 
