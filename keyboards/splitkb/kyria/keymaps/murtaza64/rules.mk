@@ -6,3 +6,4 @@ RGBLIGHT_ENABLE = yes      # Enable keyboard RGB underglow
 CONVERT_TO = liatris
 COMMAND_ENABLE = yes
 CONSOLE_ENABLE = yes
+CAPS_WORD_ENABLE = yes

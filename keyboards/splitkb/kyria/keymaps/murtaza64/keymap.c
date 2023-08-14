@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "action_layer.h"
+#include "color.h"
 #include "gpio.h"
 #include "keycodes.h"
 #include "keymap_us.h"
@@ -22,9 +23,7 @@
 
 enum layers {
     _COLEMAK_DH = 0,
-    _QWERTY,
-    // _DVORAK,
-    _NAV,
+    _NAV_NUM,
     _SYM,
     _NUM,
     _FUNCTION,
@@ -33,12 +32,10 @@ enum layers {
 
 
 // Aliases for readability
-#define QWERTY   DF(_QWERTY)
 #define COLEMAK  DF(_COLEMAK_DH)
-#define DVORAK   DF(_DVORAK)
 
 #define SYM      MO(_SYM)
-#define NAV      MO(_NAV)
+#define NAV      MO(_NAV_NUM)
 #define NUM      MO(_NUM)
 #define FKEYS    MO(_FUNCTION)
 #define ADJUST   MO(_ADJUST)
@@ -57,7 +54,6 @@ enum layers {
 #define D_CTRL   MT(MOD_LCTL  , KC_D)
 #define S_ALT    MT(MOD_LALT  , KC_S)
 #define A_GUI    MT(MOD_LGUI  , KC_A)
-#define D_GUI    MT(MOD_LGUI  , KC_D)
 
 #define N_SHIFT  MT(MOD_RSFT  , KC_N)
 #define E_CTRL   MT(MOD_RCTL  , KC_E)
@@ -69,6 +65,12 @@ enum layers {
 #define S_CTRL   MT(MOD_LCTL  , KC_S)
 #define R_ALT    MT(MOD_LALT  , KC_R)
 // #define A_GUI    MT(MOD_LGUI  , KC_A)
+#define D_GUI    MT(MOD_LGUI  , KC_D)
+
+#define N1_SHFT  MT(MOD_LSFT  , KC_1)
+#define N2_CTRL  MT(MOD_LCTL  , KC_2)
+#define N3_ALT   MT(MOD_LALT  , KC_3)
+#define N6_GUI   MT(MOD_LGUI  , KC_6)
 
 // Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
 // The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
@@ -76,27 +78,6 @@ enum layers {
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/*
- * Base Layer: QWERTY
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |   Q  |   W  |   E  |   R  |   T  |                              |   Y  |   U  |   I  |   O  |   P  |        |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |   Esc  |   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |     ' "|
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |   Z  |   X  |   C  |   V  |   B  |F-Keys|      |  |      |      |   N  |   M  | ,  < | . >  | /  ? |        |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Adjust| Nav  | Tab  | Bksp |      |  |      | Space| Enter| Sym  | Menu |
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [_QWERTY] = LAYOUT(
-      XXXXXXX , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , XXXXXXX,
-      KC_ESC  , A_GUI,  S_ALT  , D_CTRL , F_SHIFT,   KC_G ,                                        KC_H, J_SHIFT, K_CTRL,   L_ALT, SC_GUI, KC_QUOT,
-      XXXXXXX , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , XXXXXXX,XXXXXXX,     XXXXXXX, XXXXXXX, KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 ADJUST, NAV    ,  KC_TAB ,KC_BSPC, SYM    ,     NUM    , KC_SPC , KC_ENT, FKEYS, KC_APP
-    ),
-
 /*
  * Base Layer: Colemak DH
  *
@@ -114,29 +95,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_COLEMAK_DH] = LAYOUT(
       XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, XXXXXXX,
       KC_ESC  , KC_A , R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , KC_O  , KC_QUOT,
-      XXXXXXX , KC_Z ,  KC_X   ,  KC_C  ,  D_GUI ,   KC_V , XXXXXXX,KC_MUTE,     XXXXXXX, XXXXXXX, KC_K,  H_GUI ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 ADJUST, NAV    ,  KC_TAB ,KC_BSPC, SYM    ,     NUM    , KC_SPC , KC_ENT, FKEYS, KC_APP
+      CW_TOGG , KC_Z ,  KC_X   ,  KC_C  ,  D_GUI ,   KC_V , XXXXXXX,KC_MUTE,     XXXXXXX, XXXXXXX, KC_K,  H_GUI ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
+                                 XXXXXXX, XXXXXXX,  KC_TAB ,KC_BSPC, SYM    ,     NAV    , KC_SPC , KC_ENT, FKEYS, KC_APP
     ),
 
-/*
- * Nav Layer: Media, navigation
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |      |      |      |                              |Home  | PgDn | PgUp | End  |M Play| Delete |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  GUI |  Alt | Ctrl | Shift|      |                              |  ←   |   ↓  |   ↑  |   →  | Mute | Insert |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |      | GUI  |      |      |      |  |      |      |M Prev|Vol - |Vol + |M Next|Pause | PrtSc  |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [_NAV] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END, KC_MPLY , KC_DEL,
-      _______, KC_LGUI, KC_LALT, KC_LCTL, KC_LSFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, KC_MUTE, KC_INS,
-      _______, _______, _______, _______, KC_LGUI, _______, _______, _______, _______, _______, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, KC_PAUS, KC_PSCR,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    [_NAV_NUM] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, KC_DEL,
+      _______, KC_4   , N3_ALT , N2_CTRL, N1_SHFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, _______, KC_INS,
+      _______, KC_9   , KC_8   , KC_7   , N6_GUI , _______, _______, _______, _______, _______, KC_MPRV, KC_MPLY, _______, KC_MNXT, KC_PAUS, KC_PSCR,
+                                 _______, _______, _______, KC_0   , KC_5   , _______, _______, _______, _______, _______
     ),
 
 /*
@@ -167,10 +134,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_FUNCTION] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-      _______, KC_F7  , KC_F5  , KC_F3  , KC_F1  , _______,                                     _______, KC_F12 , KC_F2  , KC_F4  , KC_F6  , _______,
-      _______, _______, _______, KC_F11 , KC_F9  , _______, _______, _______, _______, _______, _______, KC_F8  , KC_F10 , _______, _______, _______,
-                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+      _______, _______, _______, KC_F12 , KC_F11 , _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, KC_F4  , KC_F3  , KC_F2  , KC_F1  , _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, KC_F9  , KC_F8  , KC_F7  , KC_F6  , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                                 _______, _______, _______, KC_F10 , KC_F5  , _______, _______, _______, _______, _______
     ),
 
 /*
@@ -188,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ADJUST] = LAYOUT(
-      _______, _______, _______, QWERTY , _______, _______,                                    _______, _______, _______, _______,  _______, _______,
+      _______, _______, _______, _______, _______, _______,                                    _______, _______, _______, _______,  _______, _______,
       _______, _______, _______, _______, _______, _______,                                    RGB_TOG, RGB_SAI, RGB_HUI, RGB_VAI,  RGB_MOD, _______,
       _______, _______, _______, COLEMAK, _______, _______,_______, _______, _______, _______, _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD, _______,
                                  _______, _______, _______,_______, _______, _______, _______, _______, _______, _______
@@ -217,34 +184,69 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //     ),
 };
 
+//     RGB index map
+//     LEFT UNDERGLOW: 0 1 2 3 4 5                                                                              RIGHT_UNDERGLOW: 31 32 33 34 35 36
+//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
+//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
+//       18     , 17     , 16     , 15     , 14     , 13     , 12     , 11     , _______, _______, _______, _______, _______, _______, _______, _______,
+//                                  10     , 9      , 8      , 7      , 6      , _______, _______, _______, _______, _______
+//     ),
+#define LEFT_ALL 0, 31
+#define RIGHT_ALL 31, 31
+#define BOTH_ALL 0, 62
+#define HSV_BASE_WHITE 230, 60, 255
+#define HSV_SYM_YELLOW 40, 160, 255
+#define HSV_NAV_BLUE 150, 128, 255
+#define HSV_NUM_GREEN 80, 160, 255
+#define HSV_FUNC_PURPLE 200, 160, 255
+
+const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {BOTH_ALL, HSV_BASE_WHITE}
+);
+
+const rgblight_segment_t PROGMEM sym_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {BOTH_ALL, HSV_SYM_YELLOW}
+);
+
+const rgblight_segment_t PROGMEM nav_num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {LEFT_ALL, HSV_NUM_GREEN},
+    {RIGHT_ALL, HSV_NAV_BLUE}
+);
+
+const rgblight_segment_t PROGMEM func_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {BOTH_ALL, HSV_FUNC_PURPLE}
+);
+
+const rgblight_segment_t PROGMEM caps_word_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {18, 1, HSV_NUM_GREEN}
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+    base_layer,
+    sym_layer,
+    nav_num_layer,
+    func_layer,
+    caps_word_layer
+);
+
 void keyboard_post_init_user(void) {
     rgblight_sethsv_noeeprom(230, 60, 255);
+    rgblight_layers = my_rgb_layers;
     // disable Liatris light
     setPinOutput(24);
     writePinHigh(24);
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state | default_layer_state)) {
-        case _QWERTY:
-            rgblight_sethsv_noeeprom(0, 200, 255);
-            break;
-        case _COLEMAK_DH:
-            rgblight_sethsv_noeeprom(230, 60, 255);
-            break;
-        case _SYM:
-            rgblight_sethsv_noeeprom(40, 160, 255);
-            break;
-        case _NUM:
-            rgblight_sethsv_noeeprom(80, 160, 255);
-            break;
-        case _NAV:
-            rgblight_sethsv_noeeprom(150, 128, 255);
-            break;
-        default:
-            break;
-    }
+    rgblight_set_layer_state(0, layer_state_cmp(state, _COLEMAK_DH));
+    rgblight_set_layer_state(1, layer_state_cmp(state, _SYM));
+    rgblight_set_layer_state(2, layer_state_cmp(state, _NAV_NUM));
+    rgblight_set_layer_state(3, layer_state_cmp(state, _FUNCTION));
     return state;
+}
+
+void caps_word_set_user(bool active) {
+    rgblight_set_layer_state(4, active);
 }
 
 #ifdef ENCODER_ENABLE
