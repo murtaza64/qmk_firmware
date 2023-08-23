@@ -34,6 +34,7 @@
 #    	define RGBLIGHT_LIMIT_VAL 150
 #    endif
 #    define RGBLIGHT_LAYERS
+// #    define RGBLIGHT_LAYERS_RETAIN_VAL
 #endif
 
 #ifdef ENCODER_ENABLE

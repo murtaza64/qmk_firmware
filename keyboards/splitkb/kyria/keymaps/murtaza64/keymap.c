@@ -28,11 +28,14 @@ enum layers {
     _NUM,
     _FUNCTION,
     _ADJUST,
+    _LEAGUE,
+    _WASD,
 };
 
 
 // Aliases for readability
 #define COLEMAK  DF(_COLEMAK_DH)
+#define LEAGUE   DF(_LEAGUE)
 
 #define SYM      MO(_SYM)
 #define NAV      MO(_NAV_NUM)
@@ -71,6 +74,8 @@ enum layers {
 #define N2_CTRL  MT(MOD_LCTL  , KC_2)
 #define N3_ALT   MT(MOD_LALT  , KC_3)
 #define N6_GUI   MT(MOD_LGUI  , KC_6)
+#define CTRL_D   C(KC_D)
+#define CTRL_U   C(KC_U)
 
 // Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
 // The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
@@ -96,7 +101,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, XXXXXXX,
       KC_ESC  , KC_A , R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , KC_O  , KC_QUOT,
       CW_TOGG , KC_Z ,  KC_X   ,  KC_C  ,  D_GUI ,   KC_V , XXXXXXX,KC_MUTE,     XXXXXXX, XXXXXXX, KC_K,  H_GUI ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 XXXXXXX, XXXXXXX,  KC_TAB ,KC_BSPC, SYM    ,     NAV    , KC_SPC , KC_ENT, FKEYS, KC_APP
+                                 ADJUST , CTRL_U,  KC_TAB ,KC_BSPC, SYM    ,     NAV    , KC_SPC , KC_ENT, CTRL_D, FKEYS
     ),
 
     [_NAV_NUM] = LAYOUT(
@@ -155,12 +160,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                        `----------------------------------'  `----------------------------------'
  */
     [_ADJUST] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                    _______, _______, _______, _______,  _______, _______,
-      _______, _______, _______, _______, _______, _______,                                    RGB_TOG, RGB_SAI, RGB_HUI, RGB_VAI,  RGB_MOD, _______,
-      _______, _______, _______, COLEMAK, _______, _______,_______, _______, _______, _______, _______, RGB_SAD, RGB_HUD, RGB_VAD, RGB_RMOD, _______,
+      _______, _______, _______, _______, _______, _______,                                    _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, LEAGUE , _______, _______,                                    RGB_TOG, _______, _______, RGB_VAI, _______, _______,
+      _______, _______, _______, COLEMAK, _______, _______,_______, _______, _______, _______, _______, _______, _______, RGB_VAD, _______, _______,
                                  _______, _______, _______,_______, _______, _______, _______, _______, _______, _______
     ),
 
+    [_LEAGUE] = LAYOUT(
+      KC_ESC , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,                                     COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+      KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                                     COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+      XXXXXXX, KC_A   , KC_S   , KC_D   , KC_F   , XXXXXXX, XXXXXXX, KC_MUTE, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+                                 KC_LSFT, KC_LCTL, KC_LALT, KC_SPC , XXXXXXX, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK
+    ),
+
+    [_WASD] = LAYOUT(
+      KC_ESC , KC_1   , KC_Q   , KC_X   , KC_E   , KC_R   ,                                     COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+      KC_TAB , KC_LSFT, KC_A   , KC_W   , KC_D   , KC_F   ,                                     COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+      KC_LCTL, KC_2   , KC_Z   , KC_S   , KC_C   , XXXXXXX, XXXXXXX, KC_MUTE, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+                                 KC_4   , KC_3   , KC_LALT, KC_SPC , XXXXXXX, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK
+    ),
 
 // /*
 //  * Layer template
@@ -186,39 +204,101 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 //     RGB index map
 //     LEFT UNDERGLOW: 0 1 2 3 4 5                                                                              RIGHT_UNDERGLOW: 31 32 33 34 35 36
-//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-//       _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
-//       18     , 17     , 16     , 15     , 14     , 13     , 12     , 11     , _______, _______, _______, _______, _______, _______, _______, _______,
-//                                  10     , 9      , 8      , 7      , 6      , _______, _______, _______, _______, _______
+//       30     , 29     , 28     , 27     , 26     , 25     ,                                     56     , 57     , 58     , 59     , 60     , 61     ,
+//       24     , 23     , 22     , 21     , 20     , 19     ,                                     50     , 51     , 52     , 53     , 54     , 55     ,
+//       18     , 17     , 16     , 15     , 14     , 13     , 12     , 11     , 42     , 43     , 44     , 45     , 46     , 47     , 48     , 49     ,
+//                                  10     , 9      , 8      , 7      , 6      , 37     , 38     , 39     , 40     , 41
 //     ),
 #define LEFT_ALL 0, 31
 #define RIGHT_ALL 31, 31
 #define BOTH_ALL 0, 62
+#define LEFT_UNDER 0, 6
+#define LEFT_KEYS 6, 25
+#define RIGHT_UNDER 31, 6
+#define RIGHT_KEYS 37, 25
+
 #define HSV_BASE_WHITE 230, 60, 255
-#define HSV_SYM_YELLOW 40, 160, 255
+#define HSV_SYM_YELLOW 40, 180, 255
 #define HSV_NAV_BLUE 150, 128, 255
 #define HSV_NUM_GREEN 80, 160, 255
 #define HSV_FUNC_PURPLE 200, 160, 255
+#define HSV_ADJ_RED 10, 160, 255
+#define HSV_DIM 230, 60, 50
 
 const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {BOTH_ALL, HSV_BASE_WHITE}
+    {BOTH_ALL, HSV_BASE_WHITE},
+    {37, 1, HSV_NAV_BLUE},
+    {41, 1, HSV_FUNC_PURPLE},
+    {6, 1, HSV_SYM_YELLOW},
+    {10, 1, HSV_ADJ_RED}
 );
 
 const rgblight_segment_t PROGMEM sym_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {BOTH_ALL, HSV_SYM_YELLOW}
+    {LEFT_KEYS, HSV_DIM},
+    {RIGHT_KEYS, HSV_DIM},
+    {6, 1, HSV_SYM_YELLOW},
+
+    {13, 3, HSV_SYM_YELLOW},
+    {19, 5, HSV_SYM_YELLOW},
+    {25, 4, HSV_SYM_YELLOW},
+    {44, 2, HSV_SYM_YELLOW},
+    {50, 5, HSV_SYM_YELLOW},
+    {57, 3, HSV_SYM_YELLOW},
+    {LEFT_UNDER, HSV_SYM_YELLOW},
+    {RIGHT_UNDER, HSV_SYM_YELLOW}
 );
 
 const rgblight_segment_t PROGMEM nav_num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {LEFT_ALL, HSV_NUM_GREEN},
-    {RIGHT_ALL, HSV_NAV_BLUE}
+    {LEFT_KEYS, HSV_DIM},
+    {RIGHT_KEYS, HSV_DIM},
+    {37, 1, HSV_NAV_BLUE},
+
+    {14, 4, HSV_NUM_GREEN},
+    {20, 4, HSV_NUM_GREEN},
+    {6, 2, HSV_NUM_GREEN},
+    {LEFT_UNDER, HSV_NUM_GREEN},
+
+    {61, 1, HSV_NAV_BLUE},
+    {56, 4, HSV_NAV_BLUE},
+    {55, 1, HSV_NAV_BLUE},
+    {50, 4, HSV_NAV_BLUE},
+    {47, 3, HSV_NAV_BLUE},
+    {44, 2, HSV_NAV_BLUE},
+    {RIGHT_UNDER, HSV_NAV_BLUE}
 );
 
 const rgblight_segment_t PROGMEM func_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-    {BOTH_ALL, HSV_FUNC_PURPLE}
+    {LEFT_KEYS, HSV_DIM},
+    {RIGHT_KEYS, HSV_DIM},
+    {41, 1, HSV_FUNC_PURPLE},
+
+    {14, 4, HSV_FUNC_PURPLE},
+    {20, 4, HSV_FUNC_PURPLE},
+    {6, 2, HSV_FUNC_PURPLE},
+    {26, 2, HSV_FUNC_PURPLE},
+    {LEFT_UNDER, HSV_FUNC_PURPLE}
 );
 
 const rgblight_segment_t PROGMEM caps_word_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {18, 1, HSV_NUM_GREEN}
+);
+
+const rgblight_segment_t PROGMEM league_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {LEFT_UNDER, 160, 180, 255},
+    {LEFT_KEYS, 27, 255, 255},
+    {RIGHT_ALL, HSV_DIM}
+);
+
+const rgblight_segment_t PROGMEM adj_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+    {LEFT_KEYS, HSV_DIM},
+    {RIGHT_KEYS, HSV_DIM},
+    {10, 1, HSV_ADJ_RED},
+
+    {50, 1, HSV_ADJ_RED},
+    {15, 1, HSV_ADJ_RED},
+    {21, 1, HSV_ADJ_RED},
+    {LEFT_UNDER, HSV_ADJ_RED},
+    {RIGHT_UNDER, HSV_ADJ_RED}
 );
 
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
@@ -226,7 +306,9 @@ const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
     sym_layer,
     nav_num_layer,
     func_layer,
-    caps_word_layer
+    caps_word_layer,
+    league_layer,
+    adj_layer
 );
 
 void keyboard_post_init_user(void) {
@@ -238,13 +320,18 @@ void keyboard_post_init_user(void) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    rgblight_set_layer_state(0, layer_state_cmp(state, _COLEMAK_DH));
     rgblight_set_layer_state(1, layer_state_cmp(state, _SYM));
     rgblight_set_layer_state(2, layer_state_cmp(state, _NAV_NUM));
     rgblight_set_layer_state(3, layer_state_cmp(state, _FUNCTION));
+    rgblight_set_layer_state(6, layer_state_cmp(state, _ADJUST));
     return state;
 }
 
+layer_state_t default_layer_state_set_user(layer_state_t state) {
+    rgblight_set_layer_state(0, layer_state_cmp(state, _COLEMAK_DH));
+    rgblight_set_layer_state(5, layer_state_cmp(state, _LEAGUE));
+    return state;
+}
 void caps_word_set_user(bool active) {
     rgblight_set_layer_state(4, active);
 }
