@@ -28,6 +28,7 @@ enum layers {
     _NUM,
     _FUNCTION,
     _ADJUST,
+    _MODS,
     _LEAGUE,
     _WASD,
 };
@@ -36,6 +37,7 @@ enum layers {
 // Aliases for readability
 #define COLEMAK  DF(_COLEMAK_DH)
 #define LEAGUE   DF(_LEAGUE)
+#define WASD   DF(_WASD)
 
 #define SYM      MO(_SYM)
 #define NAV      MO(_NAV_NUM)
@@ -77,31 +79,26 @@ enum layers {
 #define CTRL_D   C(KC_D)
 #define CTRL_U   C(KC_U)
 
-// Note: LAlt/Enter (ALT_ENT) is not the same thing as the keyboard shortcut Alt+Enter.
-// The notation `mod/tap` denotes a key that activates the modifier `mod` when held down, and
-// produces the key `tap` when tapped (i.e. pressed and released).
+#define MOD_SPC  LT(_MODS, KC_SPC)
+
+#define OS_LCTL  OSM(MOD_LCTL)
+#define OS_LALT  OSM(MOD_LALT)
+#define OS_LSFT  OSM(MOD_LSFT)
+#define OS_LGUI  OSM(MOD_LGUI)
+
+#define OS_RCTL  OSM(MOD_RCTL)
+#define OS_RALT  OSM(MOD_RALT)
+#define OS_RSFT  OSM(MOD_RSFT)
+#define OS_RGUI  OSM(MOD_RGUI)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-/*
- * Base Layer: Colemak DH
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |  Tab   |   Q  |   W  |   F  |   P  |   B  |                              |   J  |   L  |   U  |   Y  | ;  : |        |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |   Esc  |   A  |   R  |   S  |   T  |   G  |                              |   M  |   N  |   E  |   I  |   O  |     ' "|
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   D  |   V  |F-Keys| Mute |  |      |      |   K  |   H  | ,  < | . >  | /  ? |        |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Adjust| Nav  | Tab  | Bksp |      |  |      | Space| Enter| Sym  | Menu |
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
+
     [_COLEMAK_DH] = LAYOUT(
       XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, XXXXXXX,
       KC_ESC  , KC_A , R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , KC_O  , KC_QUOT,
       CW_TOGG , KC_Z ,  KC_X   ,  KC_C  ,  D_GUI ,   KC_V , XXXXXXX,KC_MUTE,     XXXXXXX, XXXXXXX, KC_K,  H_GUI ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 ADJUST , CTRL_U,  KC_TAB ,KC_BSPC, SYM    ,     NAV    , KC_SPC , KC_ENT, CTRL_D, FKEYS
+                                 ADJUST , CTRL_U,  KC_TAB ,KC_BSPC, SYM    ,     NAV    , MOD_SPC, KC_ENT, CTRL_D, FKEYS
     ),
 
     [_NAV_NUM] = LAYOUT(
@@ -115,20 +112,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Sym Layer
  *
  * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |  `   |  [   |  ]   |  &   |                              |      |  _   |  !   |  @   |      |        |
+ * |        |      |  `   |  [   |  ]   |  &   |                              |      |  +   |  !   |  @   |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |        |  #   |  ~   |  (   |  )   |  |   |                              |   *  |  -   |  =   |  $   |  \   |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |  {   |  }   |  ^   |      |      |  |      |      |   %  |  +   |      |      |      |        |
+ * |        |      |      |  {   |  }   |  ^   |      |      |  |      |      |   %  |  _   |      |      |      |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  */
     [_SYM] = LAYOUT(
-     _______, _______, KC_GRV , KC_LBRC, KC_RBRC, KC_AMPR,                                     _______, KC_UNDS, KC_EXLM, _______, _______, _______,
+     _______, _______, KC_GRV , KC_LBRC, KC_RBRC, KC_AMPR,                                     _______, KC_PLUS, KC_EXLM, KC_AT  , _______, _______,
      _______, KC_HASH, KC_TILD, KC_LPRN, KC_RPRN, KC_PIPE,                                     KC_ASTR, KC_MINS, KC_EQL , KC_DLR , KC_BSLS, _______,
-     _______, _______, _______, KC_LCBR, KC_RCBR, KC_CIRC, _______, _______, _______, _______, KC_PERC, KC_PLUS, _______, _______, _______, _______,
+     _______, _______, _______, KC_LCBR, KC_RCBR, KC_CIRC, _______, _______, _______, _______, KC_PERC, KC_UNDS, _______, _______, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -145,31 +142,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  _______, _______, _______, KC_F10 , KC_F5  , _______, _______, _______, _______, _______
     ),
 
-/*
- * Adjust Layer: Default layer settings, RGB
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |        |      |      |QWERTY|      |      |                              |      |      |      |      |      |        |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |                              | TOG  | SAI  | HUI  | VAI  | MOD  |        |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |      |Colmak|      |      |      |      |  |      |      |      | SAD  | HUD  | VAD  | RMOD |        |
- * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        |      |      |      |      |      |  |      |      |      |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
     [_ADJUST] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                    _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, LEAGUE , _______, _______,                                    RGB_TOG, _______, _______, RGB_VAI, _______, _______,
-      _______, _______, _______, COLEMAK, _______, _______,_______, _______, _______, _______, _______, _______, _______, RGB_VAD, _______, _______,
-                                 _______, _______, _______,_______, _______, _______, _______, _______, _______, _______
+      _______, _______, _______, WASD   , _______, _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, LEAGUE , _______, _______,                                     RGB_TOG, _______, _______, RGB_VAI, _______, _______,
+      _______, _______, _______, COLEMAK, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_VAD, _______, _______,
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
+
+    [_MODS] = LAYOUT(
+      _______, _______, _______, _______, _______, _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, _______, OS_LALT, OS_LCTL, OS_LSFT, _______,                                     _______, OS_RSFT, OS_RCTL, OS_RALT, _______, _______,
+      _______, _______, _______, _______, OS_LGUI, _______, _______, _______, _______, _______, _______, OS_RGUI, _______, _______, _______, _______,
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
     [_LEAGUE] = LAYOUT(
       KC_ESC , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,                                     COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
       KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,                                     COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
-      XXXXXXX, KC_A   , KC_S   , KC_D   , KC_F   , XXXXXXX, XXXXXXX, KC_MUTE, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
+      KC_P   , KC_A   , KC_S   , KC_D   , KC_F   , KC_B   , XXXXXXX, KC_MUTE, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK,
                                  KC_LSFT, KC_LCTL, KC_LALT, KC_SPC , XXXXXXX, COLEMAK, COLEMAK, COLEMAK, COLEMAK, COLEMAK
     ),
 
@@ -285,7 +275,8 @@ const rgblight_segment_t PROGMEM caps_word_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 
 const rgblight_segment_t PROGMEM league_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {LEFT_UNDER, 160, 180, 255},
-    {LEFT_KEYS, 27, 255, 255},
+    {LEFT_KEYS, 27, 220, 255},
+    {20, 4, 160, 180, 255},
     {RIGHT_ALL, HSV_DIM}
 );
 
@@ -297,6 +288,7 @@ const rgblight_segment_t PROGMEM adj_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {50, 1, HSV_ADJ_RED},
     {15, 1, HSV_ADJ_RED},
     {21, 1, HSV_ADJ_RED},
+    {27, 1, HSV_ADJ_RED},
     {LEFT_UNDER, HSV_ADJ_RED},
     {RIGHT_UNDER, HSV_ADJ_RED}
 );
@@ -314,6 +306,7 @@ const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
 void keyboard_post_init_user(void) {
     rgblight_sethsv_noeeprom(230, 60, 255);
     rgblight_layers = my_rgb_layers;
+
     // disable Liatris light
     setPinOutput(24);
     writePinHigh(24);
@@ -338,7 +331,6 @@ void caps_word_set_user(bool active) {
 
 #ifdef ENCODER_ENABLE
 bool encoder_update_user(uint8_t index, bool clockwise) {
-
     if (index == 0) {
         // Volume control
         if (clockwise) {
