@@ -40,3 +40,18 @@
 #ifdef ENCODER_ENABLE
 #    define ENCODER_RESOLUTION 2
 #endif
+
+#define TAPPING_TERM 180
+#define PERMISSIVE_HOLD
+#define QUICK_TAP_TERM_PER_KEY
+
+#define RETRO_SHIFT 500
+#define NO_AUTO_SHIFT_NUMERIC
+
+// defining this here helps with LSP
+#ifndef TAP_DANCE_ENABLE
+#    define TAP_DANCE_ENABLE
+#endif
+#ifndef COMBO_ENABLE
+#    define COMBO_ENABLE
+#endif

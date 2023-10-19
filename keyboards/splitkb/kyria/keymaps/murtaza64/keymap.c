@@ -19,6 +19,8 @@
 #include "keycodes.h"
 #include "keymap_us.h"
 #include "rgblight.h"
+#include "process_tap_dance.h"
+#include "process_combo.h"
 #include QMK_KEYBOARD_H
 
 enum layers {
@@ -32,6 +34,14 @@ enum layers {
     _LEAGUE,
     _WASD,
 };
+// Tap Dance keycodes
+enum td_keycodes {
+    SH_RP
+};
+
+// `finished` and `reset` functions for each tapdance keycode
+void shrp_finished(tap_dance_state_t *state, void *user_data);
+void shrp_reset(tap_dance_state_t *state, void *user_data);
 
 
 // Aliases for readability
@@ -76,10 +86,16 @@ enum layers {
 #define N2_CTRL  MT(MOD_LCTL  , KC_2)
 #define N3_ALT   MT(MOD_LALT  , KC_3)
 #define N6_GUI   MT(MOD_LGUI  , KC_6)
+
+#define ESC_CTL  MT(MOD_LCTL, KC_ESC)
+#define ENT_SHF  MT(MOD_LSFT, KC_ENT)
+
 #define CTRL_D   C(KC_D)
 #define CTRL_U   C(KC_U)
 
 #define MOD_SPC  LT(_MODS, KC_SPC)
+#define NAV_SPC  LT(_NAV_NUM, KC_SPC)
+#define SYM_BSP  LT(_SYM, KC_BSPC)
 
 #define OS_LCTL  OSM(MOD_LCTL)
 #define OS_LALT  OSM(MOD_LALT)
@@ -91,21 +107,22 @@ enum layers {
 #define OS_RSFT  OSM(MOD_RSFT)
 #define OS_RGUI  OSM(MOD_RGUI)
 
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_COLEMAK_DH] = LAYOUT(
-      XXXXXXX , KC_Q ,  KC_W   ,  KC_F  ,   KC_P ,   KC_B ,                                        KC_J,   KC_L ,  KC_U ,   KC_Y ,KC_SCLN, XXXXXXX,
-      KC_ESC  , KC_A , R_ALT   , S_CTRL , T_SHIFT,   KC_G ,                                        KC_M, N_SHIFT, E_CTRL, I_ALT  , KC_O  , KC_QUOT,
-      CW_TOGG , KC_Z ,  KC_X   ,  KC_C  ,  D_GUI ,   KC_V , XXXXXXX,KC_MUTE,     XXXXXXX, XXXXXXX, KC_K,  H_GUI ,KC_COMM, KC_DOT ,KC_SLSH, XXXXXXX,
-                                 ADJUST , CTRL_U,  KC_TAB ,KC_BSPC, SYM    ,     NAV    , MOD_SPC, KC_ENT, CTRL_D, FKEYS
+      _______, KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, XXXXXXX,
+      KC_TAB , KC_A   , R_ALT  , S_CTRL , T_SHIFT, KC_G   ,                                     KC_M   , N_SHIFT, E_CTRL , I_ALT  , KC_O   , KC_QUOT,
+      CW_TOGG, KC_Z   , KC_X   , KC_C   , D_GUI  , KC_V   , XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, KC_K   , H_GUI  , KC_COMM, KC_DOT , KC_SLSH, XXXXXXX,
+                                 ADJUST , _______, ESC_CTL, SYM_BSP, OS_LALT, OS_RGUI, NAV_SPC, ENT_SHF, _______, FKEYS
     ),
 
     [_NAV_NUM] = LAYOUT(
-      _______, _______, _______, _______, _______, _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______, KC_DEL,
-      _______, KC_4   , N3_ALT , N2_CTRL, N1_SHFT, _______,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, _______, KC_INS,
-      _______, KC_9   , KC_8   , KC_7   , N6_GUI , _______, _______, _______, _______, _______, KC_MPRV, KC_MPLY, _______, KC_MNXT, KC_PAUS, KC_PSCR,
-                                 _______, _______, _______, KC_0   , KC_5   , _______, _______, _______, _______, _______
+      _______, _______, KC_7   , KC_8   , KC_9   , _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END , _______, KC_DEL ,
+      _______, KC_0   , KC_4   , KC_5   , KC_6   , _______,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, _______, KC_INS ,
+      _______, _______, KC_1   , KC_2   , KC_3   , _______, _______, _______, _______, _______, KC_MPRV, KC_MPLY, _______, KC_MNXT, KC_PAUS, KC_PSCR,
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
 /*
@@ -124,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [_SYM] = LAYOUT(
      _______, _______, KC_GRV , KC_LBRC, KC_RBRC, KC_AMPR,                                     _______, KC_PLUS, KC_EXLM, KC_AT  , _______, _______,
-     _______, KC_HASH, KC_TILD, KC_LPRN, KC_RPRN, KC_PIPE,                                     KC_ASTR, KC_MINS, KC_EQL , KC_DLR , KC_BSLS, _______,
+     _______, KC_HASH, KC_TILD, KC_LPRN,TD(SH_RP), KC_PIPE,                                     KC_ASTR, KC_MINS, KC_EQL , KC_DLR , KC_BSLS, _______,
      _______, _______, _______, KC_LCBR, KC_RCBR, KC_CIRC, _______, _______, _______, _______, KC_PERC, KC_UNDS, _______, _______, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
@@ -139,13 +156,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, KC_F12 , KC_F11 , _______,                                     _______, _______, _______, _______, _______, _______,
       _______, KC_F4  , KC_F3  , KC_F2  , KC_F1  , _______,                                     _______, _______, _______, _______, _______, _______,
       _______, KC_F9  , KC_F8  , KC_F7  , KC_F6  , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                                 _______, _______, _______, KC_F10 , KC_F5  , _______, _______, _______, _______, _______
+                                 _______, _______, KC_F5  , KC_F10 , _______, _______, _______, _______, _______, _______
     ),
 
     [_ADJUST] = LAYOUT(
-      _______, _______, _______, WASD   , _______, _______,                                     _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, LEAGUE , _______, _______,                                     RGB_TOG, _______, _______, RGB_VAI, _______, _______,
-      _______, _______, _______, COLEMAK, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_VAD, _______, _______,
+      _______, _______, _______, WASD   , DT_UP  , _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, LEAGUE , DT_PRNT, _______,                                     RGB_TOG, _______, _______, RGB_VAI, _______, _______,
+      _______, _______, _______, COLEMAK, DT_DOWN, _______, _______, _______, _______, _______, _______, _______, _______, RGB_VAD, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -217,18 +234,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const rgblight_segment_t PROGMEM base_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {BOTH_ALL, HSV_BASE_WHITE},
-    {37, 1, HSV_NAV_BLUE},
+    {38, 1, HSV_NAV_BLUE},
     {41, 1, HSV_FUNC_PURPLE},
-    {6, 1, HSV_SYM_YELLOW},
+    {7, 1, HSV_SYM_YELLOW},
     {10, 1, HSV_ADJ_RED}
 );
 
 const rgblight_segment_t PROGMEM sym_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {LEFT_KEYS, HSV_DIM},
     {RIGHT_KEYS, HSV_DIM},
-    {6, 1, HSV_SYM_YELLOW},
+    {7, 1, HSV_SYM_YELLOW},
 
     {13, 3, HSV_SYM_YELLOW},
+
     {19, 5, HSV_SYM_YELLOW},
     {25, 4, HSV_SYM_YELLOW},
     {44, 2, HSV_SYM_YELLOW},
@@ -241,11 +259,11 @@ const rgblight_segment_t PROGMEM sym_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 const rgblight_segment_t PROGMEM nav_num_layer[] = RGBLIGHT_LAYER_SEGMENTS(
     {LEFT_KEYS, HSV_DIM},
     {RIGHT_KEYS, HSV_DIM},
-    {37, 1, HSV_NAV_BLUE},
+    {38, 1, HSV_NAV_BLUE},
 
     {14, 4, HSV_NUM_GREEN},
     {20, 4, HSV_NUM_GREEN},
-    {6, 2, HSV_NUM_GREEN},
+    {7, 2, HSV_NUM_GREEN},
     {LEFT_UNDER, HSV_NUM_GREEN},
 
     {61, 1, HSV_NAV_BLUE},
@@ -264,7 +282,7 @@ const rgblight_segment_t PROGMEM func_layer[] = RGBLIGHT_LAYER_SEGMENTS(
 
     {14, 4, HSV_FUNC_PURPLE},
     {20, 4, HSV_FUNC_PURPLE},
-    {6, 2, HSV_FUNC_PURPLE},
+    {7, 2, HSV_FUNC_PURPLE},
     {26, 2, HSV_FUNC_PURPLE},
     {LEFT_UNDER, HSV_FUNC_PURPLE}
 );
@@ -341,11 +359,101 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     } else if (index == 1) {
         // Page up/Page down
         if (clockwise) {
-            tap_code(KC_PGDN);
+            tap_code16(C(KC_TAB));
         } else {
-            tap_code(KC_PGUP);
+            tap_code16(C(S(KC_TAB)));
         }
     }
     return false;
 }
 #endif
+
+const uint16_t PROGMEM combo_ei[] = {E_CTRL, I_ALT, COMBO_END};
+const uint16_t PROGMEM combo_ne[] = {N_SHIFT, E_CTRL, COMBO_END};
+const uint16_t PROGMEM combo_rs[] = {R_ALT, S_CTRL, COMBO_END};
+const uint16_t PROGMEM combo_nh[] = {N_SHIFT, H_GUI, COMBO_END};
+const uint16_t PROGMEM combo_ln[] = {KC_L, N_SHIFT, COMBO_END};
+const uint16_t PROGMEM combo_td[] = {T_SHIFT, D_GUI, COMBO_END};
+const uint16_t PROGMEM combo_pt[] = {KC_P, T_SHIFT, COMBO_END};
+const uint16_t PROGMEM combo_st[] = {S_CTRL, T_SHIFT, COMBO_END};
+combo_t key_combos[] = {
+    COMBO(combo_ei, KC_SCLN),
+    COMBO(combo_rs, KC_Q),
+    COMBO(combo_ln, KC_J),
+    COMBO(combo_pt, KC_B),
+    // COMBO(combo_st, KC_ESC),
+    // COMBO(combo_ne, KC_ENT),
+};
+
+uint16_t get_quick_tap_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case SYM_BSP:
+            return 0;
+        default:
+            return QUICK_TAP_TERM;
+    }
+}
+
+bool get_custom_auto_shifted_key(uint16_t keycode, keyrecord_t *record) {
+    switch(keycode) {
+        case N_SHIFT:
+        case E_CTRL:
+        case I_ALT:
+        case H_GUI:
+        case T_SHIFT:
+        case S_CTRL:
+        case R_ALT:
+        case D_GUI:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    tap_dance_action_t *action;
+
+    switch (keycode) {
+        // tap paren early
+        case TD(SH_RP):
+            action = &tap_dance_actions[TD_INDEX(keycode)];
+            if (!record->event.pressed && action->state.count && !action->state.finished) {
+                tap_code16(KC_RPRN);
+                reset_tap_dance(&action->state);
+            }
+    }
+    return true;
+}
+
+typedef struct {
+    bool shift_pressed;
+} td_mod_tap_data;
+
+void shrp_finished(tap_dance_state_t *state, void *user_data) {
+    td_mod_tap_data *data = (td_mod_tap_data *)user_data;
+    // tap_code(KC_F);
+    if (state->count == 1 /* && state->pressed */) {
+        register_mods(MOD_BIT(KC_LSFT));
+        // tap_code(KC_C);
+        data->shift_pressed = true;
+    }
+}
+
+void shrp_reset(tap_dance_state_t *state, void *user_data) {
+    td_mod_tap_data *data = (td_mod_tap_data *)user_data;
+    // tap_code(KC_R);
+    if (data->shift_pressed) {
+        unregister_mods(MOD_BIT(KC_LSFT));
+        // tap_code(KC_P);
+        data->shift_pressed = false;
+    }
+}
+
+
+// Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
+tap_dance_action_t tap_dance_actions[] = {
+    [SH_RP] = {
+        .fn = {NULL, shrp_finished, shrp_reset},
+        .user_data = (void *)&((td_mod_tap_data){false}),
+    }
+};
