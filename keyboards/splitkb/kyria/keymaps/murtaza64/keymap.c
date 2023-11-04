@@ -25,13 +25,14 @@
 
 enum layers {
     _COLEMAK_DH = 0,
-    _NAV_NUM,
-    _SYM,
-    _NUM,
-    _FUNCTION,
     _ADJUST,
-    _MODS,
+    _CALLUM,
+    _FUNCTION,
     _LEAGUE,
+    _MODS,
+    _NAV_NUM,
+    _NUM,
+    _SYM,
     _WASD,
 };
 // Tap Dance keycodes
@@ -107,6 +108,11 @@ void shrp_reset(tap_dance_state_t *state, void *user_data);
 #define OS_RSFT  OSM(MOD_RSFT)
 #define OS_RGUI  OSM(MOD_RGUI)
 
+#define OS_CALM  OSL(_CALLUM)
+#define OS_MEH   OSM(MOD_MEH)
+#define OS_HYPR  OSM(MOD_HYPR)
+#define HOMEROW  HYPR(KC_SPC)
+
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -115,13 +121,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, XXXXXXX,
       KC_TAB , KC_A   , R_ALT  , S_CTRL , T_SHIFT, KC_G   ,                                     KC_M   , N_SHIFT, E_CTRL , I_ALT  , KC_O   , KC_QUOT,
       CW_TOGG, KC_Z   , KC_X   , KC_C   , D_GUI  , KC_V   , XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, KC_K   , H_GUI  , KC_COMM, KC_DOT , KC_SLSH, XXXXXXX,
-                                 ADJUST , _______, ESC_CTL, SYM_BSP, OS_LALT, OS_RGUI, NAV_SPC, ENT_SHF, _______, FKEYS
+                                 ADJUST , _______, ESC_CTL, SYM_BSP, OS_CALM, OS_RGUI, NAV_SPC, ENT_SHF, _______, FKEYS
     ),
 
     [_NAV_NUM] = LAYOUT(
       _______, _______, KC_7   , KC_8   , KC_9   , _______,                                     KC_HOME, KC_PGDN, KC_PGUP, KC_END , _______, KC_DEL ,
       _______, KC_0   , KC_4   , KC_5   , KC_6   , _______,                                     KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, _______, KC_INS ,
       _______, _______, KC_1   , KC_2   , KC_3   , _______, _______, _______, _______, _______, KC_MPRV, KC_MPLY, _______, KC_MNXT, KC_PAUS, KC_PSCR,
+                                 _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
+
+    [_CALLUM] = LAYOUT(
+      _______, _______, _______, _______, HOMEROW, _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, _______, OS_LALT, OS_LCTL, OS_LSFT, _______,                                     _______, _______, _______, _______, _______, _______,
+      _______, _______, OS_MEH , OS_HYPR, OS_LGUI, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
@@ -341,6 +354,11 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 layer_state_t default_layer_state_set_user(layer_state_t state) {
     rgblight_set_layer_state(0, layer_state_cmp(state, _COLEMAK_DH));
     rgblight_set_layer_state(5, layer_state_cmp(state, _LEAGUE));
+    if (layer_state_cmp(state, _LEAGUE)) {
+        autoshift_disable();
+    } else {
+        autoshift_enable();
+    }
     return state;
 }
 void caps_word_set_user(bool active) {
