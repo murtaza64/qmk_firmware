@@ -112,7 +112,9 @@ void shrp_reset(tap_dance_state_t *state, void *user_data);
 #define OS_MEH   OSM(MOD_MEH)
 #define OS_HYPR  OSM(MOD_HYPR)
 #define HOMEROW  HYPR(KC_SPC)
-
+#define BROWSER  HYPR(KC_J)
+#define TERMINL  HYPR(KC_K)
+#define SLACK    HYPR(KC_L)
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -121,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, KC_Q   , KC_W   , KC_F   , KC_P   , KC_B   ,                                     KC_J   , KC_L   , KC_U   , KC_Y   , KC_SCLN, XXXXXXX,
       KC_TAB , KC_A   , R_ALT  , S_CTRL , T_SHIFT, KC_G   ,                                     KC_M   , N_SHIFT, E_CTRL , I_ALT  , KC_O   , KC_QUOT,
       CW_TOGG, KC_Z   , KC_X   , KC_C   , D_GUI  , KC_V   , XXXXXXX, KC_MUTE, XXXXXXX, XXXXXXX, KC_K   , H_GUI  , KC_COMM, KC_DOT , KC_SLSH, XXXXXXX,
-                                 ADJUST , _______, ESC_CTL, SYM_BSP, OS_CALM, OS_RGUI, NAV_SPC, ENT_SHF, _______, FKEYS
+                                 ADJUST , _______, ESC_CTL, SYM_BSP, OS_LGUI, OS_CALM, NAV_SPC, ENT_SHF, _______, FKEYS
     ),
 
     [_NAV_NUM] = LAYOUT(
@@ -133,8 +135,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_CALLUM] = LAYOUT(
       _______, _______, _______, _______, HOMEROW, _______,                                     _______, _______, _______, _______, _______, _______,
-      _______, _______, OS_LALT, OS_LCTL, OS_LSFT, _______,                                     _______, _______, _______, _______, _______, _______,
-      _______, _______, OS_MEH , OS_HYPR, OS_LGUI, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      _______, _______, OS_LALT, OS_LCTL, OS_LSFT, _______,                                     _______, BROWSER, TERMINL, SLACK  , _______, _______,
+     _______, _______, OS_MEH , OS_HYPR, OS_LGUI, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 
